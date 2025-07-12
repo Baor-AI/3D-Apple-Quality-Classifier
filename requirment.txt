@@ -1,0 +1,13 @@
+numpy
+pyrealsense2
+opencv-python
+keyboard
+torch
+torchvision
+scikit-learn
+open3d
+roboflow
+matplotlib
+einops
+# Segment Anything Model (cài đặt trực tiếp từ Github)
+git+httpsgithub.comfacebookresearchsegment-anything.git

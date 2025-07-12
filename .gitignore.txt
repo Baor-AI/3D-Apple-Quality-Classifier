@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-selfcheck.json
+
+# Dữ liệu và Models (không nên đưa lên Git vì dung lượng lớn)
+data/*
+!data/.gitkeep
+dataset/*
+!dataset/.gitkeep
+results/*
+!results/.gitkeep
+models/*
+!models/.gitkeep
+models/sam_vit_b_01ec64.pth # Bỏ qua model SAM
+best_dgcnn_model.pt
+temp_apple_detect.jpg
+
+# Môi trường và file cấu hình local
+.env
+*.log
+*.sqlite3
+*.db
+
+# File hệ điều hành
+.DS_Store
+Thumbs.db
