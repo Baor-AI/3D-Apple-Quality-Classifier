@@ -141,7 +141,15 @@ python apple_quality.py
     * **Transformer** tổng hợp thông tin toàn cục để đưa ra dự đoán cuối cùng.
 
 ---
+---
 
+## Lời cảm ơn (Acknowledgments)
+
+Dự án này sẽ không thể hoàn thành nếu không có các công cụ và mô hình tuyệt vời từ cộng đồng. Xin chân thành cảm ơn:
+
+* **Mô hình phát hiện Táo (YOLO):** tôi sử dụng model đã được huấn luyện từ dự án **"Apple-detection-loeah" (version 1)** được chia sẻ trên Roboflow Universe.
+* **Segment Anything Model (SAM):** Từ Meta AI.
+* **Các thư viện mã nguồn mở:** PyTorch, Open3D, NumPy và OpenCV.
 ## ©️ Giấy phép
 
 Dự án này được cấp phép theo Giấy phép MIT. Xem file `LICENSE` để biết thêm chi tiết.
