@@ -1764,7 +1764,59 @@ def train_model(dataset_dir: str, epochs: int = 50, batch_size: int = 8,
         if patience_counter >= early_stopping_patience:
             print(f"🛑 Early stopping at epoch {epoch+1}")
             break
+    # =================== ĐÁNH GIÁ TRÊN TẬP TEST ===================
+    print("\n----------------------------------------------------")
+    print("🏁 Bắt đầu đánh giá trên tập dữ liệu Test...")
+
+    # Tải lại mô hình tốt nhất đã lưu
+    best_model_path = 'best_dgcnn_model.pt'
+    if os.path.exists(best_model_path):
+        # Khởi tạo lại một mô hình mới để chắc chắn không bị ảnh hưởng
+        final_model = DGCNN_Transformer(
+            num_classes=4, input_dim=10, k=k, ball_radius=ball_radius,
+            use_hybrid=use_hybrid, use_gat=use_gat
+        ).to(device)
+        
+        # Tải trọng số tốt nhất
+        checkpoint = torch.load(best_model_path, map_location=device)
+        final_model.load_state_dict(checkpoint['model_state_dict'])
+        print(f"✅ Đã tải mô hình tốt nhất từ epoch {checkpoint['epoch']+1} với Val Acc: {checkpoint['best_acc']:.2f}%")
+
+        # Bắt đầu đánh giá
+        final_model.eval()
+        test_correct = 0
+        test_total = 0
+        all_preds = []
+        all_labels = []
+
+        with torch.no_grad():
+            for batch_features, batch_labels in test_loader:
+                batch_features = batch_features.to(device)
+                batch_labels = batch_labels.squeeze().to(device)
+
+                outputs = final_model(batch_features)
+                _, predicted = torch.max(outputs.data, 1)
+
+                test_total += batch_labels.size(0)
+                test_correct += (predicted == batch_labels).sum().item()
+                
+                # Lưu lại dự đoán và nhãn thật để xem báo cáo chi tiết
+                all_preds.extend(predicted.cpu().numpy())
+                all_labels.extend(batch_labels.cpu().numpy())
+
+        # Tính toán và in ra độ chính xác cuối cùng
+        final_test_acc = 100 * test_correct / test_total if test_total > 0 else 0
+        print(f"\n🏆 === Độ chính xác cuối cùng trên tập Test: {final_test_acc:.2f}% === 🏆")
+
+        # In ra báo cáo phân loại chi tiết
+        class_names = ["Normal", "Bruised", "Cracked", "Rotten"]
+        print("\n📊 Báo cáo phân loại chi tiết trên tập Test:")
+        print(classification_report(all_labels, all_preds, target_names=class_names, digits=4))
+
+    else:
+        print(f"❌ Không tìm thấy file mô hình '{best_model_path}'. Bỏ qua bước đánh giá trên tập test.")
     
+    print("----------------------------------------------------")
     print(f'\n🎯 Training completed!')
     print(f'🏆 Best Test Accuracy: {best_acc:.2f}%')
     
